@@ -1,15 +1,15 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html>
 <head>
   <title>Launcher Chat + Desbloqueo Audio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-  <script>
-    // URL de tu página del chat
-    const chatURL = 'https://ipleones.romachat.com/live/Ag5dAT8XmQjGtjfse'; // <-- PONÉ LA URL REAL ACÁ
+  <p style="font-family: sans-serif;">Abriendo chat...</p>
 
-    // Script bookmarklet que queremos ejecutar en la página de chat
+  <script>
+    const chatURL = 'https://ipleones.romachat.com/live/Ag5dAT8XmQjGtjfse'; // <-- Acá poné tu URL REAL
+
     const script = `
       (function() {
         if (window.__audiosDesbloqueados) return;
@@ -38,8 +38,26 @@
       })();
     `;
 
-    // Redirige a la página del chat con el script en el hash
-    window.location.href = \`\${chatURL}#inject=\${encodeURIComponent(script)}\`;
+    // Abrimos la página del chat en una nueva ventana
+    const newWindow = window.open(chatURL, '_blank');
+
+    if (newWindow) {
+      // Esperamos a que cargue la nueva ventana para inyectar el script
+      const injectScript = () => {
+        try {
+          newWindow.eval(script);
+          console.log('✅ Script inyectado correctamente');
+        } catch (error) {
+          console.warn('⚠️ No se pudo inyectar el script todavía, reintentando...', error);
+          setTimeout(injectScript, 100);
+        }
+      };
+
+      // Intentamos inyectar después de pequeño delay
+      setTimeout(injectScript, 500);
+    } else {
+      alert('⚠️ No se pudo abrir la ventana. Asegúrate de permitir pop-ups.');
+    }
   </script>
 </body>
 </html>
