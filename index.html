@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Launcher Chat + Desbloqueo Audio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <script>
+    // URL de tu página del chat
+    const chatURL = 'https://ipleones.romachat.com/live/Ag5dAT8XmQjGtjfse'; // <-- PONÉ LA URL REAL ACÁ
+
+    // Script bookmarklet que queremos ejecutar en la página de chat
+    const script = `
+      (function() {
+        if (window.__audiosDesbloqueados) return;
+        const sonidosObjetivo = ['custom-sound-chime', 'custom-sound-door'];
+        function desbloquearSonidos() {
+          document.querySelectorAll('audio').forEach(audio => {
+            if (sonidosObjetivo.includes(audio.id)) {
+              audio.muted = true;
+              audio.play().then(() => {
+                audio.pause();
+                audio.currentTime = 0;
+                audio.muted = false;
+              }).catch(() => {});
+            }
+          });
+          window.__audiosDesbloqueados = true;
+          document.removeEventListener('click', desbloquearSonidos);
+          document.removeEventListener('touchstart', desbloquearSonidos);
+        }
+        if (document.hasFocus() && performance.now() > 100) {
+          setTimeout(desbloquearSonidos, 0);
+        } else {
+          document.addEventListener('click', desbloquearSonidos, { once: true });
+          document.addEventListener('touchstart', desbloquearSonidos, { once: true });
+        }
+      })();
+    `;
+
+    // Redirige a la página del chat con el script en el hash
+    window.location.href = \`\${chatURL}#inject=\${encodeURIComponent(script)}\`;
+  </script>
+</body>
+</html>
