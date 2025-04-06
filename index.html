@@ -8,34 +8,41 @@
   <p style="font-family: sans-serif;">Abriendo chat...</p>
 
   <script>
-    const chatURL = 'https://ipleones.romachat.com/live/Ag5dAT8XmQjGtjfse'; // <-- Acá poné tu URL REAL
+    const chatURL = 'https://ipleones.romachat.com/home'; // <-- Acá poné tu URL REAL
 
     const script = `
-      (function() {
-        if (window.__audiosDesbloqueados) return;
-        const sonidosObjetivo = ['custom-sound-chime', 'custom-sound-door'];
-        function desbloquearSonidos() {
-          document.querySelectorAll('audio').forEach(audio => {
-            if (sonidosObjetivo.includes(audio.id)) {
-              audio.muted = true;
-              audio.play().then(() => {
-                audio.pause();
-                audio.currentTime = 0;
-                audio.muted = false;
-              }).catch(() => {});
-            }
-          });
-          window.__audiosDesbloqueados = true;
-          document.removeEventListener('click', desbloquearSonidos);
-          document.removeEventListener('touchstart', desbloquearSonidos);
-        }
-        if (document.hasFocus() && performance.now() > 100) {
-          setTimeout(desbloquearSonidos, 0);
-        } else {
-          document.addEventListener('click', desbloquearSonidos, { once: true });
-          document.addEventListener('touchstart', desbloquearSonidos, { once: true });
-        }
-      })();
+      javascript:(function() {
+  if (window.__audiosDesbloqueados) {
+    alert('✅ Los sonidos ya están desbloqueados.');
+    return;
+  }
+
+  const sonidosObjetivo = ['custom-sound-chime', 'custom-sound-door'];
+
+  function desbloquearSonidos() {
+    document.querySelectorAll('audio').forEach(audio => {
+      if (sonidosObjetivo.includes(audio.id)) {
+        audio.muted = true;
+        audio.play().then(() => {
+          audio.pause();
+          audio.currentTime = 0;
+          audio.muted = false;
+        }).catch(() => {});
+      }
+    });
+
+    window.__audiosDesbloqueados = true;
+    document.removeEventListener('click', desbloquearSonidos);
+    document.removeEventListener('touchstart', desbloquearSonidos);
+  }
+
+  if (document.hasFocus() && performance.now() > 100) {
+    setTimeout(disbloquearSonidos, 0);
+  } else {
+    document.addEventListener('click', desbloquearSonidos, { once: true });
+    document.addEventListener('touchstart', desbloquearSonidos, { once: true });
+  }
+})();
     `;
 
     // Abrimos la página del chat en una nueva ventana
